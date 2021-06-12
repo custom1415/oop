@@ -70,12 +70,16 @@ class Player {
   togglePlay() {
     if (video.paused) {
       video.play();
+      playBtn.classList.replace("fa-play", "fa-pause");
+      playBtn.setAttribute("title", "Pause");
     } else {
       video.pause();
+      this.showPlayIcon();
     }
   }
   showPlayIcon() {
-    playBtn.textContent = ">";
+    playBtn.classList.replace("fa-pause", "fa-play");
+
     playAgainBtn.style.display = "unset";
     playAgainBtn.addEventListener("click", this.gotoStart);
     if (video.currentTime !== video.duration) {
@@ -111,28 +115,36 @@ class Player {
 
     if (volume < 0.1) {
       volume = 0;
-      volumeIcon.textContent = "-";
-    } else {
-      volumeIcon.textContent = "+";
     }
     if (volume > 0.9) {
       volume = 1;
     }
     volumeBar.style.width = `${volume * 100}%`;
     video.volume = volume;
+    volumeIcon.className = "";
+    if (volume > 0.7) {
+      volumeIcon.classList.add("fas", "fa-volume-up");
+    } else if (volume < 0.7 && volume > 0) {
+      volumeIcon.classList.add("fas", "fa-volume-down");
+    } else if (volume === 0) {
+      volumeIcon.classList.add("fas", "fa-volume-off");
+    }
     this.lastVolume = volume;
   }
   toggleMute() {
-    volumeIcon.textContent = "";
+    volumeIcon.className = "";
     if (video.volume) {
       this.lastVolume = video.volume;
       video.volume = 0;
 
-      volumeIcon.textContent = "-";
+      volumeIcon.classList.add("fas", "fa-volume-mute");
+      volumeIcon.setAttribute("title", "Unmute");
+
       volumeBar.style.width = 0;
     } else {
       video.volume = this.lastVolume;
-      volumeIcon.textContent = "+";
+      volumeIcon.classList.add("fas", "fa-volume-up");
+      volumeIcon.setAttribute("title", "Mute");
       volumeBar.style.width = `${this.lastVolume * 100}%`;
     }
   }
